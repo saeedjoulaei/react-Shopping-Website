@@ -1,7 +1,10 @@
-import React from "react";
+import axios from "axios";
 
-const Api = () => {
-  return <div></div>;
+const base_url = "https://fakestoreapi.com";
+
+const getProducts = async () => {
+  const response = await axios.get(`${base_url}/products`);
+  return response.data;
 };
 
-export default Api;
+export { getProducts };
