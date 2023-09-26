@@ -4,18 +4,13 @@ import React, { useContext } from "react";
 import { productsContext } from "../context/ProductContextProvider";
 //components
 import Product from "./shared/Product";
-
+//styles
+import styles from "./Store.module.css";
 const Store = () => {
   const products = useContext(productsContext);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "space-between",
-      }}
-    >
+    <div className={styles.container}>
       {products.map((product) => (
         <Product key={product.id} productData={product} />
       ))}
