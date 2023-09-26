@@ -6,6 +6,17 @@ const initialState = {
   total: 0,
   checkOut: false,
 };
+const sumItems = (items) => {
+  const itemsCounter = items.reduce(
+    (total, product) => total + product.quantity,
+    0
+  );
+  const total = items
+    .reduce((total, product) => total + product.price * product.quantity, 0)
+    .toFixed(2);
+  return { itemsCounter: itemsCounter, total: total };
+};
+
 const cardReducer = (state, action) => {
   switch (action.type) {
     case "ADD_ITEM":
@@ -18,23 +29,27 @@ const cardReducer = (state, action) => {
       return {
         ...state,
         selectedItems: [...state.selectedItems],
+        ...sumItems(state.selectedItems),
+        checkOut: false,
       };
     case "REMOVE_ITEM":
       const newSelectedItem = state.selectedItems.filter(
         (item) => item.id !== action.payload.id
       );
+
       return {
         ...state,
         selectedItems: [...newSelectedItem],
+        ...sumItems(state.selectedItems),
       };
     case "INCREASE":
       const indexI = state.selectedItems.findIndex(
         (item) => item.id === action.payload.id
       );
       state.selectedItems[indexI].quantity++;
-      return { ...state };
+      return { ...state, ...sumItems(state.selectedItems) };
 
-    case "decrease":
+    case "DECREASE":
       const indexD = state.selectedItems.findIndex(
         (item) => item.id === action.payload.id
       );
@@ -60,6 +75,7 @@ const cardReducer = (state, action) => {
       return state;
   }
 };
+
 export const cardContext = createContext();
 const CardContextProvider = ({ children }) => {
   const [state, dispatch] = useReducer(cardReducer, initialState);
